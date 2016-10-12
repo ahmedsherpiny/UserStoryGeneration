@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="userStory.persona">
+
+    <class name="Hobby" table="HOBBY">
+        <id name="id" column="HOBBY_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+    </class>
+    
+     <class name="GoalRequirement" table="GOAL_REQ">
+         <id name="id" column="GOAL_REQ_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="done" column="IS_DONE"/>
+    </class>
+    
+    <class name="Goal" table="GOAL">
+        <id name="id" column="GOAL_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="achieved" column="IS_ACHIEVED"/>
+        <set name="requirements">
+        	<key column="GOAL_ID" not-null="false"/>
+        	 <many-to-many column="GOAL_REQ_ID"
+            unique="true" class="GoalRequirement"/>
+       	</set> 
+    </class>
+    
+    
+    <class name="NeedFulfiller" table="FULFILLER">
+         <id name="id" column="FULFILLER_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="found" column="IS_FOUND"/>
+    </class>
+    
+    <class name="Need" table="NEED">
+        <id name="id" column="NEED_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="fulfilled" column="IS_FULFILLED"/>
+        <set name="fulfillers">
+        	<key column="NEED_ID" not-null="false"/>
+        	 <many-to-many column="FULFILLER_ID"
+            unique="true" class="NeedFulfiller"/>
+       	</set> 
+    </class>
+    
+     <class name="Skill" table="SKILL">
+        <id name="id" column="SKILL_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="SKILL_NAME"/>
+        <property name="criteriaValue" column="SKILL_VALUE"/>
+    </class>
+    
+    <class name="Value" table="VALUE">
+        <id name="id" column="VALUE_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="VALUE_NAME"/>
+        <property name="criteriaValue" column="VALUE_VALUE"/>
+    </class>
+    
+    <class name="Emotion" table="EMOTION">
+        <id name="id" column="EMOTION_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="EMOTION_NAME"/>
+        <property name="criteriaValue" column="EMOTION_VALUE"/>
+    </class>
+    
+     <class name="Personality" table="Personality">
+        <id name="id" column="PERSONALITY_ID">
+            <generator class="increment"/>
+        </id>
+        <set name="Skills">
+        	<key column="PERSONALITY_ID" not-null="false"/>
+        	 <many-to-many column="SKILL_ID"
+            unique="true" class="Skill"/>
+       	</set> 
+       	<set name="Values">
+        	<key column="PERSONALITY_ID" not-null="false"/>
+        	 <many-to-many column="VALUE_ID"
+            unique="true" class="Value"/>
+       	</set> 
+       	<set name="Emotions">
+        	<key column="PERSONALITY_ID" not-null="false"/>
+        	 <many-to-many column="EMOTION_ID"
+            unique="true" class="Emotion"/>
+       	</set> 
+    </class>
+    
+    
+   <class name="storyCharacter" table="story_Character">
+        <id name="id" column="CHARACTER_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="age" column="AGE"/>
+        <property name="gender" column="GENDER"/>
+        <property name="profession" column="PROFESSION"/>
+        <property name="behavior" column="BEHAVIOR"/>
+        <property name="picture" column="PICTURE"/>
+        
+        <set name="goals">
+        	<key column="CHARACTER_ID" not-null="false"/>
+        	 <many-to-many column="GOAL_ID"
+            unique="true" class="Goal"/>
+       	</set> 
+
+        <set name="needs">
+        	<key column="CHARACTER_ID" not-null="false"/>
+        	 <many-to-many column="NEED_ID"
+            unique="true" class="Need"/>
+       	</set>    
+       	
+       	 <set name="hobbies">
+        	<key column="CHARACTER_ID" not-null="false"/>
+        	 <many-to-many column="HOBBY_ID"
+            unique="true" class="Hobby"/>
+       	</set>         
+        <many-to-one name="personality" class="userStory.persona.Personality" column="CHAR_PERSONALITY_ID" cascade="save-update"/>
+        
+        <set name="actions">
+        	<key column="CHARACTER_ID" not-null="false"/>
+        	 <many-to-many column="ACTION_ID"
+            unique="true" class="userStory.environment.Action"/>
+       	</set>
+        
+        <many-to-one name="currentEnvironment" class="userStory.environment.Environment" column="Char_current_Environment" cascade="save-update"/>
+         
+    </class>
+    
+    
+</hibernate-mapping>
+

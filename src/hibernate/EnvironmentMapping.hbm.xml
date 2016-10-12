@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="userStory.environment">
+   
+   <class name="Action" table="ACTIONS">
+        <id name="id" column="ACTION_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="ACTION_NAME"/>
+    </class>
+   
+   
+   <class name="EnvObject" table="ENV_OBJECTS">
+        <id name="id" column="ENV_OBJ_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="ENV_OBJ_NAME"/>
+         <set name="actions">
+        	<key column="ENV_OBJ_ID" not-null="false"/>
+        	 <many-to-many column="ACTION_ID"
+            unique="true" class="Action"/>
+       	</set>
+    </class>
+    
+    <class name="EnvEvent" table="ENV_EVENTS">
+        <id name="id" column="EVENT_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="EVENT_NAME"/>
+        <property name="emotionEffect" column="EMOTION_EFFECT"/>
+        <many-to-one name="affectedEmotion" class="userStory.persona.Emotion" column="AFFECTED_EMOTION_ID" cascade="save-update"/>
+    </class>
+   
+   <class name="Environment" table="Environment">
+        <id name="id" column="ENV_ID">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="VALUE_NAME"/>
+        <set name="objects">
+        	<key column="ENV_ID" not-null="false"/>
+        	 <many-to-many column="ENV_OBJ_ID"
+            unique="true" class="EnvObject"/>
+       	</set>
+       	<set name="events">
+        	<key column="ENV_ID" not-null="false"/>
+        	 <many-to-many column="ENV_EVENT_ID"
+            unique="true" class="EnvEvent"/>
+       	</set>
+       	<set name="possibleNextEnvironments">
+        	<key column="ENV_ID" not-null="false"/>
+        	 <many-to-many column="POSSIBLE_NEXT_ENVIRONMET_ID"
+            unique="true" class="Environment"/>
+       	</set>
+    </class>
+    
+</hibernate-mapping>
